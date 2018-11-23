@@ -8,14 +8,14 @@ const redisAddr = "localhost:6379"
 const clusterId = "static"
 
 func init() {
-	InitClusters(redisAddr, "", "0", clusterId)
+	httpfsclient.InitClusters(redisAddr, "", "0", clusterId)
 }
 
 func WriteAndRead(file string) {
 	buff, _ := os.Open(file)
 	defer buff.Close()
 	//write file to cluster
-	link, _ := Write(buff, clusterId, file, CollectionTxt)
+	link, _ := httpfsclient.Write(buff, clusterId, file, CollectionTxt)
 	fmt.Println(link.Url())
 	//read file
 	bs, _ := link.Read()
