@@ -65,6 +65,14 @@ type Server struct {
 	Mem                 int   //MB
 	MemFree             int
 	LoadAverage         int
+	available           bool //如果ut5分钟内没更新，则不可用
+}
+
+func (s Server) Id() string {
+	if s.ClusterId != "" && s.ServerId != "" {
+		return s.ClusterId + ":" + s.ServerId
+	}
+	return ""
 }
 
 type RedisService interface {

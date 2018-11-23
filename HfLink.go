@@ -48,32 +48,12 @@ func FromUrl(url string) (HfLink, bool) {
 	}
 
 	return NewHfLink(clusterId, serverId, proxy[i:]), true
-	// cluster := ""
-	// serverId := 0
-	// for c, servers := range serverMap {
-	// 	for id, s := range servers {
-	// 		if s.Proxy == fromServer {
-	// 			cluster = c
-	// 			serverId = id
-	// 		}
-	// 	}
-	// }
-	// if "" == cluster {
-	// 	return HfLink(url), false
-	// }
-	// return HfLink(cluster + ":" + strconv.Itoa(serverId) + url[i:]), true
 }
 
 // eg. s:1/txt/00/00/yyfoatapk5/bdu9kjosiq.go -> http://xxx/txt/00/00/yyfoatapk5/bdu9kjosiq.go
 func (d HfLink) Url() string {
 	clusterId, serverId, path := d.Parts()
 	return GetClusters().GetServer(clusterId, serverId).Proxy + path
-	// if dservers, ok := serverMap[serverKey]; ok {
-	// 	if http, ok1 := dservers[serverId]; ok1 {
-	// 		return http.Proxy + ds[i:]
-	// 	}
-	// }
-	// return ds
 }
 
 func (d HfLink) Stat() (FileInfo, error) {

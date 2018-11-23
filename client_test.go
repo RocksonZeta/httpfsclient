@@ -1,6 +1,7 @@
 package httpfsclient
 
 import (
+	"fmt"
 	"os"
 	"testing"
 
@@ -8,17 +9,18 @@ import (
 )
 
 const redisAddr = "localhost:6379"
+const clusterId = "static"
 
 //eg hflink: "static:s1/txt/0/0/qlkgmiidid/h9ahc8auc7.txt"
 func TestBasic(t *testing.T) {
-	InitClusters(redisAddr, "", "0", "static")
-	c := Writer{ClusterId: "static", ServerId: "s1"}
+	InitClusters(redisAddr, "", "0", clusterId)
 	file := "client.go"
 	info, err := os.Stat(file)
 	assert.Nil(t, err)
 	buff, _ := os.Open("client.go")
 	defer buff.Close()
-	link, err := c.Write(buff, "client.go", CollectionVideo)
+	link, err := Write(buff, clusterId, "client.go", CollectionTxt)
+	fmt.Println(link)
 	assert.Nil(t, err)
 	stat, err := link.Stat()
 	assert.Nil(t, err)
@@ -28,13 +30,13 @@ func TestBasic(t *testing.T) {
 	assert.Equal(t, len(bs), int(stat.Size))
 }
 func TestVideo(t *testing.T) {
-	InitClusters(redisAddr, "", "0", "static")
+	InitClusters(redisAddr, "", "0", clusterId)
 	link := HfLink("static:s1/video/0/0/9o39m9wuvi/4uie3br1wj.mp4")
 	err := link.VideoCompressDash("v1/progress")
 	assert.Nil(t, err)
 }
 func TestImage(t *testing.T) {
-	InitClusters(redisAddr, "", "0", "static")
+	InitClusters(redisAddr, "", "0", clusterId)
 	link := HfLink("static:s1/image/0/0/gysz2c6aqf/joexrtxyco.jpg")
 	links, err := link.ImageResize([]int{10, 10, 100, 100}, [][]int{{60, 60}})
 	assert.Nil(t, err)

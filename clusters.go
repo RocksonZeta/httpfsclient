@@ -7,9 +7,16 @@ import (
 )
 
 var clusters *Clusters
+var serverUts sync.Map
 
 func init() {
+	serverUts = sync.Map{} //clusterId:serverId => ServerUt
 	clusters = new(Clusters)
+}
+
+type ServerUt struct {
+	Ut          int64
+	UpdateCount int
 }
 
 func GetClusters() *Clusters {
@@ -52,10 +59,30 @@ func load(factory *kv.ServiceFactory, clusterIds ...string) {
 		redis.HMGetAll(cid, &servers)
 		cluster := Cluster{Id: cid}
 		for k, v := range servers {
+			v.available = available(v)
 			cluster.servers.Store(k, v)
 		}
 		clusters.clusters.Store(cid, cluster)
 	}
+}
+func available(server Server) bool {
+	if s, ok := serverUts.Load(server.Id()); ok {
+		if su, ok1 := s.(ServerUt); ok1 {
+			var r bool
+			if su.Ut != server.Ut {
+				r = true
+				su.UpdateCount = 0
+			} else {
+				r = su.UpdateCount <= 5
+				su.UpdateCount++
+			}
+			su.Ut = server.Ut
+			serverUts.Store(server.Id(), su)
+			return r
+		}
+	}
+	serverUts.Store(server.Id(), ServerUt{Ut: server.Ut, UpdateCount: 0})
+	return true
 }
 
 //Clusters include many clusters
@@ -64,6 +91,12 @@ type Clusters struct {
 	clusters sync.Map // clusterId :*Server
 }
 
+func (c *Clusters) GetCluster(clusterId string) (Cluster, bool) {
+	if cluster, ok := c.clusters.Load(clusterId); ok {
+		return cluster.(Cluster), ok
+	}
+	return Cluster{}, false
+}
 func (c *Clusters) GetServer(clusterId, serverId string) Server {
 	if cluster, ok := c.clusters.Load(clusterId); ok {
 		return cluster.(Cluster).GetServer(serverId)
@@ -98,11 +131,11 @@ func (c Cluster) ChooseServer() Server {
 	var maxFreeSpace int
 	c.servers.Range(func(k, v interface{}) bool {
 		s := v.(Server)
-		if s.FreeSpace > maxFreeSpace {
+		if s.FreeSpace > maxFreeSpace && s.available {
 			maxFreeSpace = s.FreeSpace
 			r = s
 		}
-		return false
+		return true
 	})
 	return r
 }

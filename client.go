@@ -91,10 +91,25 @@ type Writer struct {
 
 func (w *Writer) Write(reader io.Reader, fileName, collection string) (HfLink, error) {
 	server := GetClusters().GetServer(w.ClusterId, w.ServerId)
+	return WriteServer(server, reader, fileName, collection)
+}
+func WriteServer(server Server, reader io.Reader, fileName, collection string) (HfLink, error) {
 	_, bs, err := httputil.HttpPostForm3(server.Local+"/fs/write/"+collection, nil, []request.FileField{{FieldName: "file", FileName: fileName, File: reader}})
 	var rpath string
 	ParseResult(bs, &rpath)
-	return NewHfLink(w.ClusterId, w.ServerId, rpath), err
+	return NewHfLink(server.ClusterId, server.ServerId, rpath), err
+}
+
+func Write(reader io.Reader, clusterId, fileName, collection string) (HfLink, error) {
+	cluster, ok := GetClusters().GetCluster(clusterId)
+	if !ok {
+		return HfLink(""), errors.New("no such cluster:" + clusterId)
+	}
+	server := cluster.ChooseServer()
+	if "" == server.Local {
+		return HfLink(""), errors.New(" cluster '" + clusterId + "' no avaiable server.")
+	}
+	return WriteServer(server, reader, fileName, collection)
 }
 
 type Methods struct {
