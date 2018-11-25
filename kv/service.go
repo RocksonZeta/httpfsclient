@@ -168,7 +168,6 @@ func (r *Service) HMGetAll(key string, result interface{}) error {
 	for i := 0; i < len(vs); i += 2 {
 		ele := reflect.New(vType)
 		if bs, ok := vs[i+1].([]byte); ok {
-			fmt.Println("bs:", string(bs))
 			r.unmarshal(bs, ele.Interface())
 		}
 		m.SetMapIndex(reflect.ValueOf(string(vs[i].([]byte))), ele.Elem())
