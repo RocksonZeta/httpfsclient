@@ -178,5 +178,5 @@ type VideoCompressParam struct {
 
 func (m Methods) VideoCompressDash(hf HfLink, progressKey string) error {
 	clusterId, serverId, path := hf.Parts()
-	return m.CallAsync(clusterId, serverId, "video", "dash", VideoCompressParam{File: path, ProgressRedisKey: progressKey})
+	return m.CallAsync(clusterId, serverId, "video", "CompressDash", VideoCompressParam{File: path, ProgressRedisKey: progressKey})
 }
