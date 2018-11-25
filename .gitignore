@@ -33,7 +33,7 @@ _testmain.go
 
 # external packages folder
 .vendor/
-vendor/**
+#vendor/**
 !vendor/manifest
 
 # npm
