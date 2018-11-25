@@ -2,10 +2,10 @@ package httpfsclient_test
 
 import (
 	"fmt"
-	"httpfsclient"
 	"os"
 	"testing"
 
+	"github.com/httpfsclient"
 	"github.com/stretchr/testify/assert"
 )
 

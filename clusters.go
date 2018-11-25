@@ -1,9 +1,10 @@
 package httpfsclient
 
 import (
-	"httpfsclient/kv"
 	"sync"
 	"time"
+
+	"github.com/httpfsclient/kv"
 )
 
 var clusters *Clusters

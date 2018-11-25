@@ -3,9 +3,9 @@ package httpfsclient
 import (
 	"encoding/json"
 	"errors"
-	"httpfsclient/util/httputil"
 	"io"
 
+	"github.com/httpfsclient/util/httputil"
 	"github.com/mozillazg/request"
 )
 
