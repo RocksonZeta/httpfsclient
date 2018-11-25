@@ -5,7 +5,7 @@ import (
 	"errors"
 	"io"
 
-	"github.com/httpfsclient/util/httputil"
+	"github.com/RocksonZeta/httpfsclient/util/httputil"
 	"github.com/mozillazg/request"
 )
 

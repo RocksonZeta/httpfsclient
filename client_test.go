@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/httpfsclient"
+	"github.com/RocksonZeta/httpfsclient"
 	"github.com/stretchr/testify/assert"
 )
 

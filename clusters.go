@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/httpfsclient/kv"
+	"github.com/RocksonZeta/httpfsclient/kv"
 )
 
 var clusters *Clusters
