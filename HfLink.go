@@ -83,8 +83,8 @@ func (d HfLink) CallAsync(module, method string, args interface{}) error {
 func (d HfLink) ImageResize(crop []int, sizes [][]int) ([]HfLink, error) {
 	return Methods{}.ImageCropResize(d, crop, sizes)
 }
-func (d HfLink) VideoCompressDash(redisProgressKey string) error {
-	return Methods{}.VideoCompressDash(d, redisProgressKey)
+func (d HfLink) VideoCompressDash(videoId int, redisProgressKey string) error {
+	return Methods{}.VideoCompressDash(d, videoId, redisProgressKey)
 }
 
 func (d HfLink) Path() string {
