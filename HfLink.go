@@ -47,13 +47,16 @@ func FromUrl(url string) (HfLink, bool) {
 		return HfLink(url), false
 	}
 
-	return NewHfLink(clusterId, serverId, proxy[i:]), true
+	return NewHfLink(clusterId, serverId, url[i:]), true
 }
 
 // eg. s:1/txt/00/00/yyfoatapk5/bdu9kjosiq.go -> http://xxx/txt/00/00/yyfoatapk5/bdu9kjosiq.go
 func (d HfLink) Url() string {
 	clusterId, serverId, path := d.Parts()
 	return GetClusters().GetServer(clusterId, serverId).Proxy + path
+}
+func (d HfLink) String() string {
+	return string(d)
 }
 
 func (d HfLink) Stat() (FileInfo, error) {
