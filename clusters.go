@@ -58,7 +58,7 @@ func load(factory *kv.ServiceFactory, clusterIds ...string) {
 	for _, cid := range clusterIds {
 		var servers map[string]Server
 		redis.HMGetAll(cid, &servers)
-		cluster := Cluster{Id: cid}
+		cluster := &Cluster{Id: cid}
 		for k, v := range servers {
 			v.available = available(v)
 			cluster.servers.Store(k, v)
@@ -92,27 +92,27 @@ type Clusters struct {
 	clusters sync.Map // clusterId :*Server
 }
 
-func (c *Clusters) GetCluster(clusterId string) (Cluster, bool) {
+func (c *Clusters) GetCluster(clusterId string) (*Cluster, bool) {
 	if cluster, ok := c.clusters.Load(clusterId); ok {
-		return cluster.(Cluster), ok
+		return cluster.(*Cluster), ok
 	}
-	return Cluster{}, false
+	return nil, false
 }
 func (c *Clusters) GetServer(clusterId, serverId string) Server {
 	if cluster, ok := c.clusters.Load(clusterId); ok {
-		return cluster.(Cluster).GetServer(serverId)
+		return cluster.(*Cluster).GetServer(serverId)
 	}
 	return Server{}
 }
 func (c *Clusters) Url(clusterId, serverId string) string {
 	if cluster, ok := c.clusters.Load(clusterId); ok {
-		return cluster.(Cluster).Url(serverId)
+		return cluster.(*Cluster).Url(serverId)
 	}
 	return ""
 }
 func (c *Clusters) HfsId(url string) (clusterId, serverId string) {
 	c.clusters.Range(func(k, v interface{}) bool {
-		clusterId, serverId = v.(*Clusters).HfsId(url)
+		clusterId, serverId = v.(*Cluster).HfsId(url)
 		if serverId != "" {
 			return false
 		}
