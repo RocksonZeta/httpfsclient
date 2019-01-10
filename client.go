@@ -180,3 +180,7 @@ func (m Methods) VideoCompressDash(hf HfLink, videoId int, progressKey string) e
 	clusterId, serverId, path := hf.Parts()
 	return m.CallAsync(clusterId, serverId, "video", "CompressDash", VideoCompressParam{VideoId: videoId, File: path, ProgressRedisKey: progressKey})
 }
+func (m Methods) Mp4(hf HfLink, videoId int, progressKey string) error {
+	clusterId, serverId, path := hf.Parts()
+	return m.CallAsync(clusterId, serverId, "video", "Mp4", VideoCompressParam{VideoId: videoId, File: path, ProgressRedisKey: progressKey})
+}
