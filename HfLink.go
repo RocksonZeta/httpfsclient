@@ -89,6 +89,9 @@ func (d HfLink) ImageResize(crop []int, sizes [][]int) ([]HfLink, error) {
 func (d HfLink) VideoCompressDash(videoId int, redisProgressKey string) error {
 	return Methods{}.VideoCompressDash(d, videoId, redisProgressKey)
 }
+func (d HfLink) Mp4(videoId int, redisProgressKey string) error {
+	return Methods{}.Mp4(d, videoId, redisProgressKey)
+}
 
 func (d HfLink) Path() string {
 	ds := string(d)
