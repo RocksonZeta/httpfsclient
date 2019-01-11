@@ -174,6 +174,10 @@ func (s NullHfLink) Url() string {
 	return HfLink(s.String).Url()
 }
 
+func (s NullHfLink) HfLink() HfLink {
+	return HfLink(s.String)
+}
+
 // MarshalText implements encoding.TextMarshaler.
 // It will encode a blank string when this String is null.
 func (s NullHfLink) MarshalText() ([]byte, error) {
