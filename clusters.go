@@ -32,11 +32,9 @@ func GetServer(clusterId, serverId string) Server {
 	return cs.GetServer(clusterId, serverId)
 }
 
-func InitClusters(addr, password, db string, clusterIds ...string) {
+func InitClusters(url string, clusterIds ...string) {
 	conf := kv.RedisConfig{
-		Addr:     addr,
-		Password: password,
-		Database: db,
+		Url: url,
 	}
 	factory := kv.NewFactory(&conf)
 	load(factory, clusterIds...)
