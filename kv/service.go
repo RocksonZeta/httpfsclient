@@ -466,23 +466,3 @@ func (r *Service) Delete(key string) error {
 	_, err := r.Redis.Do("DEL", key)
 	return err
 }
-
-func dial(network string, addr string, pass string) (redis.Conn, error) {
-	if network == "" {
-		network = "tcp"
-	}
-	if addr == "" {
-		addr = "127.0.0.1:6379"
-	}
-	c, err := redis.Dial(network, addr)
-	if err != nil {
-		return nil, err
-	}
-	if pass != "" {
-		if _, err = c.Do("AUTH", pass); err != nil {
-			c.Close()
-			return nil, err
-		}
-	}
-	return c, err
-}
